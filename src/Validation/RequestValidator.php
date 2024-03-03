@@ -198,7 +198,7 @@ class RequestValidator extends AbstractValidator
         // Capture schemas for validation.
         $expected_body_raw_schema = $expected_body->content[$content_type]->schema;
         $actual_body_schema = $actual_body;
-        if ($expected_body_raw_schema->type === 'object' || $expected_body_raw_schema->type === 'array' || $expected_body_raw_schema->oneOf || $expected_body_raw_schema->anyOf) {
+        if ($expected_body_raw_schema->type === 'object' || $expected_body_raw_schema->type === 'array' || $expected_body_raw_schema->oneOf || $expected_body_raw_schema->anyOf || $expected_body_raw_schema->allOf) {
             if (in_array($content_type, ['application/json', 'application/vnd.api+json'])) {
                 $actual_body_schema = json_decode($actual_body_schema);
             } else {

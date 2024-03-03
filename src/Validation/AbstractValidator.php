@@ -21,6 +21,27 @@ abstract class AbstractValidator
     {
         $data = $schema->getSerializableData();
 
+        if (isset($data->allOf)) {
+            $mergedAllOf = [
+                'required' => [],
+                'type' => 'object',
+                'properties' => [],
+            ];
+            foreach ($data->allOf as $allOfItem) {
+                if (!isset($allOfItem->type) || $allOfItem->type !== $mergedAllOf['type']) {
+                    continue;
+                }
+                if (isset($allOfItem->required)) {
+                    $mergedAllOf['required'] = array_merge($mergedAllOf['required'], $allOfItem->required);
+                }
+                if (isset($allOfItem->properties)) {
+                    $mergedAllOf['properties'] = array_merge($mergedAllOf['properties'], (array)$allOfItem->properties);
+                }
+            }
+            $mergedAllOf['properties'] = (object) $mergedAllOf['properties'];
+            $data = (object) $mergedAllOf;
+        }
+
         if (! isset($data->properties)) {
             return $data;
         }
